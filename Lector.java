@@ -71,6 +71,22 @@ public class Lector {
 	 *	Metodos para obtener los fomatos
 	*/
 
+	/*
+		Descripcion de obtencion de formatos
+
+		Para el RFC:
+		quitar espacios para RFC ir tomando numero de letras rfc e ir validando 
+
+		Para numero de empleado:
+		numero de empleado a detectar con la misma oracion, quitar espacios y comas, se seguira añadiendo conforme siga siendo numero
+
+		Para nombre completo:
+		nombre hacer split de "C." o "C,", luego hacer split de "con" o "c o n", quitar comillas, donde haya comas, poner doble espacio, hacer validacion que detecte que no pueda haber letras solas y si las hay que las junte solo si estan separadas por un espacio y lo mismo para aquellas que empiezan con minuscula, los dobles espacios cambiarlos a espacios sencillos, quitar espacio de un principio y final
+
+		Para la fecha:
+		detectar "" de fecha, quitar todas las comillas, sustituir comas por espacios, quitar espacios de un principio y final
+	*/
+
 	public String obtenNombre(String linea){
 
 		return "";
@@ -123,7 +139,11 @@ public class Lector {
 
 	public String obtenFecha(String linea){
 
-		return "";
+		linea = linea.replaceAll("\"","");
+		linea = linea.replaceAll(","," ");
+		linea = linea.trim();
+
+		return linea;
 
 	}
 
