@@ -12,7 +12,7 @@ public class Formato {
 		this.fecha = "";
 	}
 
-	public limpia(){
+	public void limpia(){
 		this.nombre = "";
 		this.rfc = "";
 		this.numEmpleado = "";

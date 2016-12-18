@@ -6,93 +6,99 @@ import java.util.ArrayList;
 
 public class Lector {
 
-	List<String> lineas = Files.readAllLines(Paths.get("tabula-SimpleIndex_Prueba2.csv"));
 	Formato aux = new Formato();
-	ArrayList<String> documentosCSV = new ArrayList<String>();
+	ArrayList<Formato> documentosCSV = new ArrayList<Formato>();
+	//expresion regular para RFC con homoclave opcional incluida con guion
+	Pattern p = Pattern.compile("^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))((-)?([A-Z\d]{3}))?$");
+
 
 	public static void main(String[] args) {
 
+		new Lector().inicia();
+		
+	}
+
+
+	//metodo para iniciar el proyecto
+	public void inicia(){
+
 		try{
 
-			
+			List<String> lineas = Files.readAllLines(Paths.get("tabula-SimpleIndex_Prueba2.csv"));
+			Matcher m = p.matcher(linea);
 
+			for (int i = lineas.size() - 1; i >= 0; i--) {
 
-			for (int i = lineas.size - 1; i >= 0; i--) {
-
-				linea = lineas.get(i);
+				String linea = lineas.get(i);
 				
 				if ( linea.contains("numero de empleado") ) {//buscar numero de empleado
 
-					aux.setNumEmpleado(obtenNumEmpleado(linea));
+					this.aux.setNumEmpleado(obtenNumEmpleado(linea));
+			
 					
-				}else if ( linea.contains("C.") || linea.contains("C,") ) {//buscar nombre
+				} else if ( linea.contains("C.") || linea.contains("C,") ) {//buscar nombre
 					
-					aux.setRfc(obtenNumEmpleado(linea));
+					this.aux.setNombre(obtenNombre(linea));
 
-				} else{//buscar rfc
+				} else if (linea.contains("\"\"")) {//buscar feccha y terminar
+					
+					this.aux.setFecha(obtenFecha(linea));
 
+					//añadimos a array aparte
+					this.documentosCSV.add(this.aux);
+					//limpiamos el objeto
+					this.aux.limpia();
 
+				}else if (m.find()) {//busca RFC
+					
+					this.aux.setRfc(obtenRfc(linea));
 
 				}
-
-				
-
-				
-
-				//buscar fecha
-				if (lineas.get(i).charAt(0) == '"' && lineas.get(i).charAt(1) == '"') {
-
-					documentosCSV.add(aux);
-					System.out.println(aux);
-					aux = "";
-				}else {
-					aux += lineas.get(i)+"\n";
-				}
-			}
-
-			for (int i=0; i < lineas.size(); i++) {
-
-				
-
-				//separa los distintos documentosCSV
-				if (lineas.get(i).charAt(0) == '"' && lineas.get(i).charAt(1) == '"') {
-
-					documentosCSV.add(aux);
-					System.out.println(aux);
-					aux = "";
-				}else {
-					aux += lineas.get(i)+"\n";
-				}
-
-				
 
 			}
-
-			/*int aux2 = 0;
-			for (String documento : lineas) {
-
-				//System.out.println(documento);
-
-				//ArrayList<String> auxArray = ()documento.split("\n");
-
-				//System.out.println(documento);
-
-				for (String linea : documento.split("\n")) {
-					System.out.println(linea);
-					aux2++;
-				}
-
-				System.out.println(aux2);
-			}*/
 
 		}catch(Exception ex){
 
 			System.out.println("Error papu "+ex);
 
 		}
+
+	}
+
+
+	/*
+	 *	Metodos para obtener los fomatos
+	*/
+
+	public String obtenNombre(String linea){
+
+		return "";
+
 	}
 
 	public String obtenNumEmpleado(String linea){
+
+		return "";
+
+	}
+
+	public String obtenRfc(String linea){
+
+
+		linea		
+		for (int i = 0; i < linea.length(); i++ ) {
+
+			Matcher m = p.matcher(linea.substring(i, ));
+
+		}
+
+		
+
+		return "";
+
+	}
+
+	public String obtenFecha(String linea){
 
 		return "";
 
