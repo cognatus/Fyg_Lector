@@ -79,20 +79,20 @@ public class Lector {
 
 	public String obtenNumEmpleado(String linea){
 
-		String numeroAux = "";
+		String retorno = "";
 		linea = linea.split("numero de empleado")[1];
 		linea = linea.replaceAll("\\s+","");
 		linea = linea.replaceAll(",","");
 
 		for (int i = 0; i < linea.length(); i++) {
-			if (!Character.isLetter(linea.charAt(i))) {
-				numeroAux += linea.charAt(i);
+			if (Character.isDigit(linea.charAt(i))) {
+				retorno += linea.charAt(i);
+			}else{
+				break;
 			}
 		}
 
-		System.out.println(numeroAux);
-
-		return "";
+		return retorno;
 
 	}
 
