@@ -3,13 +3,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Lector {
 
 	Formato aux = new Formato();
 	ArrayList<Formato> documentosCSV = new ArrayList<Formato>();
-	//expresion regular para RFC con homoclave opcional incluida con guion
-	Pattern p = Pattern.compile("^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))((-)?([A-Z\d]{3}))?$");
+	//expresion regular para RFC
+	Pattern p = Pattern.compile("[A-Z]{4}[0-9]{6}[A-Z0-9]{3}");
 
 
 	public static void main(String[] args) {
@@ -25,23 +27,23 @@ public class Lector {
 		try{
 
 			List<String> lineas = Files.readAllLines(Paths.get("tabula-SimpleIndex_Prueba2.csv"));
-			Matcher m = p.matcher(linea);
 
 			for (int i = lineas.size() - 1; i >= 0; i--) {
 
 				String linea = lineas.get(i);
 				
-				if ( linea.contains("numero de empleado") ) {//buscar numero de empleado
+				//buscar numero de empleado y rfc, ya que en muchas ocasiones vienen juntos
+				if ( linea.contains("numero de empleado") ) {
 
+					this.aux.setRfc(obtenRfc(linea));
 					this.aux.setNumEmpleado(obtenNumEmpleado(linea));
-			
 					
 				} else if ( linea.contains("C.") || linea.contains("C,") ) {//buscar nombre
-					
+
 					this.aux.setNombre(obtenNombre(linea));
 
 				} else if (linea.contains("\"\"")) {//buscar feccha y terminar
-					
+
 					this.aux.setFecha(obtenFecha(linea));
 
 					//añadimos a array aparte
@@ -49,12 +51,11 @@ public class Lector {
 					//limpiamos el objeto
 					this.aux.limpia();
 
-				}else if (m.find()) {//busca RFC
+				}else{//busca RFC
 					
 					this.aux.setRfc(obtenRfc(linea));
 
 				}
-
 			}
 
 		}catch(Exception ex){
@@ -78,23 +79,45 @@ public class Lector {
 
 	public String obtenNumEmpleado(String linea){
 
+		String numeroAux = "";
+		linea = linea.split("numero de empleado")[1];
+		linea = linea.replaceAll("\\s+","");
+		linea = linea.replaceAll(",","");
+
+		for (int i = 0; i < linea.length(); i++) {
+			if (!Character.isLetter(linea.charAt(i))) {
+				numeroAux += linea.charAt(i);
+			}
+		}
+
+		System.out.println(numeroAux);
+
 		return "";
 
 	}
 
 	public String obtenRfc(String linea){
 
+		linea = linea.replaceAll("\\s+","");
+		String retorno = "";
 
-		linea		
-		for (int i = 0; i < linea.length(); i++ ) {
+		for ( int i = 0; i < linea.length(); i++ ) {
 
-			Matcher m = p.matcher(linea.substring(i, ));
+			try{
+
+				String buscadorAux = linea.substring(i, i+13);
+
+				Matcher m = p.matcher(buscadorAux);
+				if (m.find()) {
+					retorno = buscadorAux;
+				}
+
+			}catch(Exception ex){
+			}
 
 		}
 
-		
-
-		return "";
+		return retorno;
 
 	}
 
