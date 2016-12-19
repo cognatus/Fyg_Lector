@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class Lector {
 
-	Formato aux = new Formato();
+	Formato datosObtenidos = new Formato();
 	ArrayList<Formato> documentosCSV = new ArrayList<Formato>();
 	//expresion regular para RFC
 	Pattern p = Pattern.compile("[A-Z]{4}[0-9]{6}[A-Z0-9]{3}");
@@ -35,28 +35,38 @@ public class Lector {
 				//buscar numero de empleado y rfc, ya que en muchas ocasiones vienen juntos
 				if ( linea.contains("numero de empleado") ) {
 
-					this.aux.setRfc(obtenRfc(linea));
-					this.aux.setNumEmpleado(obtenNumEmpleado(linea));
+					this.datosObtenidos.setRfc(obtenRfc(linea));
+					this.datosObtenidos.setNumEmpleado(obtenNumEmpleado(linea));
 					
 				} else if ( linea.contains("C.") || linea.contains("C,") ) {//buscar nombre
 
-					this.aux.setNombre(obtenNombre(linea));
+					this.datosObtenidos.setNombre(obtenNombre(linea));
 
 				} else if (linea.contains("\"\"")) {//buscar feccha y terminar
 
-					this.aux.setFecha(obtenFecha(linea));
+					this.datosObtenidos.setFecha(obtenFecha(linea));
 
 					//añadimos a array aparte
-					this.documentosCSV.add(this.aux);
+					this.documentosCSV.add(this.datosObtenidos);
 					//limpiamos el objeto
-					this.aux.limpia();
+					this.datosObtenidos.limpia();
 
 				}else{//busca RFC
 					
-					this.aux.setRfc(obtenRfc(linea));
+					this.datosObtenidos.setRfc(obtenRfc(linea));
 
 				}
 			}
+
+			/*for (Formato obj : this.datosObtenidos) {
+
+				System.out.println(obj.getNombre());
+				System.out.println(obj.getFecha());
+				System.out.println(obj.getRfc());
+				System.out.println(obj.getNumEmpleado());
+				System.out.println("\n");
+				
+			}*/
 
 		}catch(Exception ex){
 
@@ -89,7 +99,7 @@ public class Lector {
 
 	public String obtenNombre(String linea){
 
-		linea = linea.contains("C.") ? linea.split("C.")[1] : linea.split("C,")[1];
+		linea = linea.contains("C.") ? linea.split("C\\.")[1] : linea.split("C,")[1];
 		linea = linea.contains("con") ? linea.split("con")[0] : linea.split("c o n")[0];
 		linea = linea.replaceAll("\"","");
 		linea = linea.replaceAll(",","  ");
@@ -97,12 +107,12 @@ public class Lector {
 		Pattern p2 = Pattern.compile("[a-z]");
 		Matcher m = p2.matcher(linea);
 
-		if (m.find()) {//acomodo si si hay minusculas 
+		//variable auxiliar para guardar palabra arreglada
+		String cambio = "";
+		//bandera para que no se guarde la misma letra dos veces en caso de que que se cumpla lo de abajo
+		boolean bandera = true;
 
-			//variable auxiliar para guardar palabra arreglada
-			String cambio = "";
-			//bandera para que no se guarde la misma letra dos veces en caso de que que se cumpla lo de abajo
-			boolean bandera = true;
+		if (m.find()) {//acomodo si si hay minusculas 
 
 			//verificamos la cadena completa
 			for (int i = 0; i < linea.length()-1; i++) {
@@ -129,11 +139,38 @@ public class Lector {
 
 			}
 			linea = cambio;
-		}		
+		}else{
 
-		System.out.println(linea);
+			//verificamos la cadena completa
+			for (int i = 0; i < linea.length()-2; i++) {
+				
+				//verificamos estar parados sobre un espacio, que el siguiente sea letra y el siguiente a ese un espacio
+				//esto para saber que el nombre esta separado
+				if ( linea.charAt(i+2) == ' ' && linea.charAt(i) == ' ' && Character.isLetter(linea.charAt(i+1)) ) {
+					//añadimos solo la letra y descartamos el espacio donde estamos parados
+					cambio += linea.charAt(i+1);
+					//apagamos el switch para que la siguiente vez que se repita el bucle no se agregue
+					bandera = false;
+				}else{
+					//veirifca si es switch esta prendido
+					if (bandera) {
+						cambio += linea.charAt(i);	
+					}else{
+						//en caso de estar apagado solo lo prende
+						bandera = true;
+					}
+					
+				}
 
-		return "";
+			}
+
+			linea = cambio;
+		}	
+
+		linea = linea.trim();
+		linea = linea.replaceAll("  "," ");
+
+		return linea;
 
 	}
 
