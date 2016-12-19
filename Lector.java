@@ -91,7 +91,7 @@ public class Lector {
 		numero de empleado a detectar con la misma oracion, quitar espacios y comas, se seguira añadiendo conforme siga siendo numero
 
 		Para nombre completo:
-		nombre hacer split de "C." o "C,", luego hacer split de "con" o "c o n", quitar comillas, donde haya comas, poner doble espacio, hacer validacion que detecte que no pueda haber letras solas y si las hay que las junte solo si estan separadas por un espacio y lo mismo para aquellas que empiezan con minuscula, los dobles espacios cambiarlos a espacios sencillos, quitar espacio de un principio y final
+		nombre hacer split de "C." o "C,", luego hacer split de "con" o "c o n d e ", quitar comillas, donde haya comas, poner doble espacio, hacer validacion que detecte que no pueda haber letras solas y si las hay que las junte solo si estan separadas por un espacio y lo mismo para aquellas que empiezan con minuscula, los dobles espacios cambiarlos a espacios sencillos, quitar espacio de un principio y final
 
 		Para la fecha:
 		detectar "" de fecha, quitar todas las comillas, sustituir comas por espacios, quitar espacios de un principio y final
@@ -100,7 +100,7 @@ public class Lector {
 	public String obtenNombre(String linea){
 
 		linea = linea.contains("C.") ? linea.split("C\\.")[1] : linea.split("C,")[1];
-		linea = linea.contains("con") ? linea.split("con")[0] : linea.split("c o n")[0];
+		linea = linea.contains("con") ? linea.split("con")[0] : linea.split("c o n d e ")[0];
 		linea = linea.replaceAll("\"","");
 		linea = linea.replaceAll(",","  ");
 
@@ -138,6 +138,7 @@ public class Lector {
 				}
 
 			}
+
 			linea = cambio;
 		}else{
 
@@ -169,6 +170,8 @@ public class Lector {
 
 		linea = linea.trim();
 		linea = linea.replaceAll("  "," ");
+
+		System.out.println(linea);
 
 		return linea;
 
