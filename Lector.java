@@ -89,6 +89,50 @@ public class Lector {
 
 	public String obtenNombre(String linea){
 
+		linea = linea.contains("C.") ? linea.split("C.")[1] : linea.split("C,")[1];
+		linea = linea.contains("con") ? linea.split("con")[0] : linea.split("c o n")[0];
+		linea = linea.replaceAll("\"","");
+		linea = linea.replaceAll(",","  ");
+
+		Pattern p2 = Pattern.compile("[a-z]");
+		Matcher m = p2.matcher(linea);
+
+		if (m.find()) {//acomodo si si hay minusculas 
+
+			//variable auxiliar para guardar palabra arreglada
+			String cambio = "";
+			//bandera para que no se guarde la misma letra dos veces en caso de que que se cumpla lo de abajo
+			boolean bandera = true;
+
+			//verificamos la cadena completa
+			for (int i = 0; i < linea.length()-1; i++) {
+				
+				Matcher m2 = p2.matcher(""+linea.charAt(i+1));
+
+				//verificamos estar parados sobre un espacio y que el siguiente sea letra minuscula
+				//esto para saber que el nombre esta separado
+				if ( m2.find() && linea.charAt(i) == ' ') {
+					//añadimos solo la letra y descartamos el espacio
+					cambio += linea.charAt(i+1);
+					//apagamos el switch para que la siguiente vez que se repita el bucle no se agregue
+					bandera = false;
+				}else{
+					//veirifca si es switch esta prendido
+					if (bandera) {
+						cambio += linea.charAt(i);	
+					}else{
+						//en caso de estar apagado solo lo prende
+						bandera = true;
+					}
+					
+				}
+
+			}
+			linea = cambio;
+		}		
+
+		System.out.println(linea);
+
 		return "";
 
 	}
