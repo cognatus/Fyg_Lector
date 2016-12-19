@@ -100,7 +100,17 @@ public class Lector {
 	public String obtenNombre(String linea){
 
 		linea = linea.contains("C.") ? linea.split("C\\.")[1] : linea.split("C,")[1];
-		linea = linea.contains("con") ? linea.split("con")[0] : linea.split("c o n d e ")[0];
+		
+		if ( linea.contains("con clave") ) {
+			//esto se hizo con fin de que no se borrara la ultima letra en unos casos
+			linea = linea.replaceAll("con clave"," tres tistres tigres tragaban trigo en un trigal");
+			linea = linea.split("tres tistres tigres tragaban trigo en un trigal")[0];
+		}else if ( linea.contains(",con,") ) {
+			linea = linea.split(",con,")[0];
+		}else{
+			linea = linea.split("c o n d e ")[0];
+		}
+		//linea = linea.contains("\\scon\\s") ? linea.split("\\scon\\s")[0] : linea.split(" c o n d e ")[0];
 		linea = linea.replaceAll("\"","");
 		linea = linea.replaceAll(",","  ");
 
@@ -156,7 +166,7 @@ public class Lector {
 					//veirifca si es switch esta prendido
 					if (bandera) {
 						cambio += linea.charAt(i);	
-					}else{
+					}else{	
 						//en caso de estar apagado solo lo prende
 						bandera = true;
 					}
