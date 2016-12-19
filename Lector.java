@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import java.io.FileWriter;
+
 public class Lector {
 
 	Formato datosObtenidos = new Formato();
@@ -14,9 +18,26 @@ public class Lector {
 	Pattern p = Pattern.compile("[A-Z]{4}[0-9]{6}[A-Z0-9]{3}");
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 
 		new Lector().inicia();
+
+		JSONObject obj = new JSONObject();
+			obj.put("Name", "crunchify.com");
+			obj.put("Author", "App Shah");
+	 
+			JSONArray company = new JSONArray();
+			company.add("Compnay: eBay");
+			company.add("Compnay: Paypal");
+			company.add("Compnay: Google");
+			obj.put("Company List", company);
+	 
+			// try-with-resources statement based on post comment below :)
+			try (FileWriter file = new FileWriter("file1.txt")) {
+				file.write(obj.toJSONString());
+				System.out.println("Successfully Copied JSON Object to File...");
+				System.out.println("\nJSON Object: " + obj);
+			}
 		
 	}
 
@@ -58,14 +79,14 @@ public class Lector {
 				}
 			}
 
-			for (Formato obj : documentosCSV){
+			/*for (Formato obj : documentosCSV){
 				System.out.println(obj.getNombre());
 				System.out.println(obj.getFecha());
 				System.out.println(obj.getRfc());
 				System.out.println(obj.getNumEmpleado());
 				System.out.println("\n");
 				
-			}
+			}*/
 
 		}catch(Exception ex){
 
