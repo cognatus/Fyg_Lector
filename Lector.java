@@ -35,38 +35,37 @@ public class Lector {
 				//buscar numero de empleado y rfc, ya que en muchas ocasiones vienen juntos
 				if ( linea.contains("numero de empleado") ) {
 
-					this.datosObtenidos.setRfc(obtenRfc(linea));
-					this.datosObtenidos.setNumEmpleado(obtenNumEmpleado(linea));
+					datosObtenidos.setRfc(obtenRfc(linea));
+					datosObtenidos.setNumEmpleado(obtenNumEmpleado(linea));
 					
 				} else if ( linea.contains("C.") || linea.contains("C,") ) {//buscar nombre
 
-					this.datosObtenidos.setNombre(obtenNombre(linea));
+					datosObtenidos.setNombre(obtenNombre(linea));
 
 				} else if (linea.contains("\"\"")) {//buscar feccha y terminar
 
-					this.datosObtenidos.setFecha(obtenFecha(linea));
+					datosObtenidos.setFecha(obtenFecha(linea));
 
 					//añadimos a array aparte
-					this.documentosCSV.add(this.datosObtenidos);
+					documentosCSV.add(new Formato(datosObtenidos.getNombre(), datosObtenidos.getRfc(), datosObtenidos.getNumEmpleado(), datosObtenidos.getFecha()));
 					//limpiamos el objeto
-					this.datosObtenidos.limpia();
+					datosObtenidos.limpia();
 
 				}else{//busca RFC
 					
-					this.datosObtenidos.setRfc(obtenRfc(linea));
+					datosObtenidos.setRfc(obtenRfc(linea));
 
 				}
 			}
 
-			/*for (Formato obj : this.datosObtenidos) {
-
+			for (Formato obj : documentosCSV){
 				System.out.println(obj.getNombre());
 				System.out.println(obj.getFecha());
 				System.out.println(obj.getRfc());
 				System.out.println(obj.getNumEmpleado());
 				System.out.println("\n");
 				
-			}*/
+			}
 
 		}catch(Exception ex){
 
@@ -180,8 +179,6 @@ public class Lector {
 
 		linea = linea.trim();
 		linea = linea.replaceAll("  "," ");
-
-		System.out.println(linea);
 
 		return linea;
 

@@ -12,6 +12,13 @@ public class Formato {
 		this.fecha = "";
 	}
 
+	public Formato(String nombre, String rfc, String numEmpleado, String fecha){
+		this.nombre = nombre;
+		this.rfc = rfc;
+		this.numEmpleado = numEmpleado;
+		this.fecha = fecha;
+	}
+
 	public void limpia(){
 		this.nombre = "";
 		this.rfc = "";
